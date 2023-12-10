@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>倉儲管理系統</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        nav {
+            background-color: #eee;
+            padding: 10px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>倉儲管理系統</h1>
+    </header>
+
+    <nav>
+        <a onclick="loadWarehousePage()">倉儲管理</a>
+        <a onclick="loadgoods()">庫存管理</a>
+        <a onclick="tracegoods()">庫存追蹤</a>
+        <a href="#orders">訂單管理</a>
+        <a href="#reports">報表生成</a>
+        <a href="#suppliers">供應商管理</a>
+        <a href="#admins">管理員管理</a>
+    </nav>
+
+    <main>
+        <section id="warehouse">
+            <h2>1. 倉儲管理</h2>
+            <!-- 在這裡加入相應的內容和功能 -->
+        </section>
+
+        <section id="inventory">
+            <h2>2. 庫存管理</h2>
+            <!-- 在這裡加入相應的內容和功能 -->
+        </section>
+
+        <section id="tracking">
+            <h2>3. 庫存追蹤</h2>
+            <!-- 在這裡加入相應的內容和功能 -->
+        </section>
+
+        <section id="orders">
+            <h2>4. 訂單管理</h2>
+            <!-- 在這裡加入相應的內容和功能 -->
+        </section>
+
+        <section id="reports">
+            <h2>5. 報表生成</h2>
+            <!-- 在這裡加入相應的內容和功能 -->
+        </section>
+
+        <section id="suppliers">
+            <h2>6. 供應商管理</h2>
+            <!-- 在這裡加入相應的內容和功能 -->
+        </section>
+
+        <section id="admins">
+            <h2>7. 管理員管理</h2>
+            <!-- 在這裡加入相應的內容和功能 -->
+        </section>
+    </main>
+    <script>
+        function loadWarehousePage() {
+            // 使用 JavaScript 將兩個介面切換
+            window.location.href = 'warhouse.html';
+        }
+        function loadgoods(){
+            window.location.href = 'goods.html';
+        }
+        function tracegoods(){
+            window.location.href = 'trace.html'
+        }
+    </script>
+</body>
+</html>
