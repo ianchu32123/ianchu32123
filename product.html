@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>產品管理系統</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input, button {
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>產品管理系統</h2>
+
+    <h3>6.1 新增產品</h3>
+    <form id="addProductForm">
+        <label for="productId">產品編號:</label>
+        <input type="text" id="productId" name="productId" required>
+        <label for="productName">產品名稱:</label>
+        <input type="text" id="productName" name="productName" required>
+        <label for="productPrice">產品價格:</label>
+        <input type="number" id="productPrice" name="productPrice" required>
+        <button type="button" onclick="addProduct()">新增產品</button>
+    </form>
+
+    <h3>6.2 檢視所有產品</h3>
+    <table id="productTable">
+        <thead>
+            <tr>
+                <th>產品編號</th>
+                <th>產品名稱</th>
+                <th>產品價格</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 此處應顯示資料庫中的產品列表 -->
+        </tbody>
+    </table>
+
+    <script>
+        function addProduct() {
+            const productId = document.getElementById('productId').value;
+            const productName = document.getElementById('productName').value;
+            const productPrice = document.getElementById('productPrice').value;
+
+            // 確保所有格子都填上值
+            if (!productId || !productName || !productPrice) {
+                alert('請填寫所有產品資訊');
+                return;
+            }
+
+            const tbody = document.querySelector('#productTable tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${productId}</td>
+                <td>${productName}</td>
+                <td>${productPrice}</td>
+                <td>
+                    <button onclick="editProduct('${productId}')">編輯</button>
+                    <button onclick="deleteProduct('${productId}')">刪除</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+
+            // 清空輸入框
+            document.getElementById('productId').value = '';
+            document.getElementById('productName').value = '';
+            document.getElementById('productPrice').value = '';
+        }
+
+        function editProduct(productId) {
+            const newName = prompt('請輸入新的產品名稱:');
+            const newPrice = prompt('請輸入新的產品價格:');
+
+            // 更新資料
+            const rows = document.querySelectorAll('#productTable tbody tr');
+            rows.forEach(row => {
+                if (row.cells[0].textContent === productId) {
+                    row.cells[1].textContent = newName;
+                    row.cells[2].textContent = newPrice;
+                    alert('編輯成功');
+                }
+            });
+        }
+
+        function deleteProduct(productId) {
+            const rows = document.querySelectorAll('#productTable tbody tr');
+            rows.forEach(row => {
+                if (row.cells[0].textContent === productId) {
+                    row.remove();
+                    alert('刪除成功');
+                }
+            });
+        }
+
+        // 加入編輯和刪除按鈕
+        function renderProductList() {
+            // 此處應實現顯示資料庫中的產品列表的相關邏輯
+            const productList = [
+                { id: 'P001', name: '產品1', price: 100 },
+                { id: 'P002', name: '產品2', price: 150 },
+                // 可根據實際情況替換為從後端獲取的資料
+            ];
+
+            const tbody = document.querySelector('#productTable tbody');
+            tbody.innerHTML = '';
+
+            productList.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>${product.price}</td>
+                    <td>
+                        <button onclick="editProduct('${product.id}')">編輯</button>
+                        <button onclick="deleteProduct('${product.id}')">刪除</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 初始化時呼叫一次
+        renderProductList();
+    </script>
+
+</body>
+</html>
