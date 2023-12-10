@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單處理</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input, button {
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>訂單處理</h2>
+
+    <form id="orderForm">
+        <label for="productSelect">選擇產品:</label>
+        <select id="productSelect">
+            <option value="product1">產品1</option>
+            <option value="product2">產品2</option>
+            <option value="product3">產品3</option>
+        </select>
+        <label for="quantityInput">數量:</label>
+        <input type="number" id="quantityInput" min="1" value="1">
+        <button type="button" onclick="addToOrder()">加入訂單</button>
+    </form>
+
+    <h3>訂單內容</h3>
+    <table id="orderTable">
+        <thead>
+            <tr>
+                <th>產品</th>
+                <th>數量</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 此處應顯示訂單內容 -->
+        </tbody>
+    </table>
+
+    <button type="button" onclick="packageOrder()">打包</button>
+
+    <h3>已打包訂單內容</h3>
+    <div id="packedOrders"></div>
+
+    <script>
+        let orderCounter = 1;
+
+        function addToOrder() {
+            const productSelect = document.getElementById('productSelect');
+            const quantityInput = document.getElementById('quantityInput');
+            const productName = productSelect.options[productSelect.selectedIndex].text;
+            const quantity = quantityInput.value;
+
+            if (quantity < 1) {
+                alert('請輸入有效數量');
+                return;
+            }
+
+            const tbody = document.querySelector('#orderTable tbody');
+            let existingRow = null;
+
+            // 檢查是否已有相同產品名稱的訂單項目
+            tbody.querySelectorAll('tr').forEach(row => {
+                if (row.cells[0].textContent === productName) {
+                    existingRow = row;
+                }
+            });
+
+            // 如果已有相同產品名稱的訂單項目，則更新數量
+            if (existingRow) {
+                const existingQuantityInput = existingRow.cells[1].querySelector('input');
+                const existingQuantity = parseInt(existingQuantityInput.value);
+                existingQuantityInput.value = existingQuantity + parseInt(quantity);
+            } else {
+                // 如果沒有相同產品名稱的訂單項目，則新增一行
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${productName}</td>
+                    <td>
+                        <input type="number" value="${quantity}" min="1" onchange="updateQuantity(this)">
+                    </td>
+                    <td>
+                        <button onclick="removeFromOrder(this)">移除</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            }
+
+            // 清空輸入框
+            quantityInput.value = '1';
+        }
+
+        function updateQuantity(input) {
+            const row = input.parentNode.parentNode;
+            const productName = row.cells[0].textContent;
+            const newQuantity = parseInt(input.value);
+
+            if (newQuantity < 1) {
+                alert('請輸入有效數量');
+                input.value = 1;
+                return;
+            }
+
+            // 更新數量
+            row.cells[1].innerHTML = `
+                <input type="number" value="${newQuantity}" min="1" onchange="updateQuantity(this)">
+            `;
+        }
+
+        function removeFromOrder(button) {
+            const row = button.parentNode.parentNode;
+            row.remove();
+        }
+
+        function packageOrder() {
+            const tbody = document.querySelector('#orderTable tbody');
+            const orderData = [];
+            tbody.querySelectorAll('tr').forEach(row => {
+                const productName = row.cells[0].textContent;
+                const quantity = parseInt(row.cells[1].querySelector('input').value);
+                orderData.push({ productName, quantity });
+            });
+
+            // 顯示已打包的訂單內容
+            const packedOrdersDiv = document.getElementById('packedOrders');
+            const orderTable = document.createElement('table');
+            orderTable.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>訂單</th>
+                        <th>產品</th>
+                        <th>數量</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${orderData.map(item => `
+                        <tr>
+                            <td>${orderCounter}</td>
+                            <td>${item.productName}</td>
+                            <td>${item.quantity}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+            packedOrdersDiv.appendChild(orderTable);
+
+            orderCounter++;
+
+            // 清空訂單內容
+            tbody.innerHTML = '';
+        }
+    </script>
+
+</body>
+</html>
