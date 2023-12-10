@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>倉庫管理系統</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input, button {
+            padding: 8px;
+            margin-right: 10px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>倉庫管理系統</h2>
+
+    <!-- 倉庫管理 -->
+    <h3>1.1 新增倉庫</h3>
+    <form id="addWarehouseForm">
+        <label for="warehouseId">倉庫編號:</label>
+        <input type="text" id="warehouseId" name="warehouseId" required>
+        <label for="warehouseName">倉庫名稱:</label>
+        <input type="text" id="warehouseName" name="warehouseName" required>
+        <label for="warehouseLocation">倉庫位置:</label>
+        <input type="text" id="warehouseLocation" name="warehouseLocation" required>
+        <button type="button" onclick="addWarehouse()">新增倉庫</button>
+    </form>
+
+    <h3>1.2 查看倉庫</h3>
+    <table id="warehouseTable">
+        <thead>
+            <tr>
+                <th>倉庫編號</th>
+                <th>倉庫名稱</th>
+                <th>倉庫位置</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 此處應顯示資料庫中的倉庫列表 -->
+        </tbody>
+    </table>
+
+    <script>
+        function addWarehouse() {
+            const warehouseId = document.getElementById('warehouseId').value;
+            const warehouseName = document.getElementById('warehouseName').value;
+            const warehouseLocation = document.getElementById('warehouseLocation').value;
+
+            // 確保所有格子都填上值
+            if (!warehouseId || !warehouseName || !warehouseLocation) {
+                alert('請填寫所有倉庫資訊');
+                return;
+            }
+
+            const tbody = document.querySelector('#warehouseTable tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${warehouseId}</td>
+                <td>${warehouseName}</td>
+                <td>${warehouseLocation}</td>
+                <td>
+                    <button onclick="editWarehouse('${warehouseId}')">編輯</button>
+                    <button onclick="deleteWarehouse('${warehouseId}')">刪除</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+
+            // 清空輸入框
+            document.getElementById('warehouseId').value = '';
+            document.getElementById('warehouseName').value = '';
+            document.getElementById('warehouseLocation').value = '';
+        }
+
+        function editWarehouse(warehouseId) {
+            const newName = prompt('請輸入新的倉庫名稱:');
+            const newLocation = prompt('請輸入新的倉庫位置:');
+
+            // 更新資料
+            const rows = document.querySelectorAll('#warehouseTable tbody tr');
+            rows.forEach(row => {
+                if (row.cells[0].textContent === warehouseId) {
+                    row.cells[1].textContent = newName;
+                    row.cells[2].textContent = newLocation;
+                    alert('編輯成功');
+                }
+            });
+        }
+
+        function deleteWarehouse(warehouseId) {
+            const rows = document.querySelectorAll('#warehouseTable tbody tr');
+            rows.forEach(row => {
+                if (row.cells[0].textContent === warehouseId) {
+                    row.remove();
+                    alert('刪除成功');
+                }
+            });
+        }
+
+        // 加入編輯和刪除按鈕
+        function renderWarehouseList() {
+            // 此處應實現顯示資料庫中的倉庫列表的相關邏輯
+            const warehouseList = [
+                { id: 'W001', name: '倉庫1', location: '位置1' },
+                { id: 'W002', name: '倉庫2', location: '位置2' },
+                // 可根據實際情況替換為從後端獲取的資料
+            ];
+
+            const tbody = document.querySelector('#warehouseTable tbody');
+            tbody.innerHTML = '';
+
+            warehouseList.forEach(warehouse => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${warehouse.id}</td>
+                    <td>${warehouse.name}</td>
+                    <td>${warehouse.location}</td>
+                    <td>
+                        <button onclick="editWarehouse('${warehouse.id}')">編輯</button>
+                        <button onclick="deleteWarehouse('${warehouse.id}')">刪除</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 初始化時呼叫一次
+        renderWarehouseList();
+    </script>
+
+</body>
+</html>
