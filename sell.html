@@ -249,9 +249,11 @@ $(document).ready(function () {
 $(document).ready(function () {
     // 獲取「銷冠王」
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "api/order.do",
         dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify({ action: "comparePackedOrders" }),
         success: function (response) {
             // 更新報告標題
             $("#bestSellingProduct").text(`銷冠王：${response.product_name_result}`);
@@ -263,12 +265,14 @@ $(document).ready(function () {
 
     // 獲取「銷量王」
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "api/order.do",
         dataType: "json",
+       contentType: "application/json",
+        data: JSON.stringify({ action: "compareMaxSalesOrder" }),
         success: function (response) {
             // 更新報告標題
-            $("#topSalesProduct").text(`銷量王：${response.orders_product_name_result}`);
+            $("#topSalesProduct").text(`銷量王：${response.total_price_result}`);
         },
         error: function () {
             alert("無法連線到伺服器");
